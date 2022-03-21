@@ -289,40 +289,10 @@ namespace Infraestructure.Repository
         }
 
         //TODO Add Update and Delete method
-        //public bool Delete<T>(T t)
-        //{
-        //    int id = (int)t.GetType().GetProperty("Id").GetValue(t);
-        //    int index = BinarySearch(id);
-        //    if (id < 0)
-        //    {
-        //        throw new ArgumentException("No existe un objeto con ese id");
-        //    }
-        //    using (BinaryReader brHeader = new BinaryReader(DataStream))
-        //    {
-        //        brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
-        //        int n = brHeader.ReadInt32();
-        //        if (n <= 0)
-        //        {
-        //            throw new Exception("No existen datos para eliminar");
-        //        }
-        //        using (BinaryWriter newBhWriter = new BinaryWriter(TemporalHeaderStream))
-        //        {
-        //            newBhWriter.Write(--n);
-        //            brHeader.BaseStream.Seek(0, SeekOrigin.End);
-        //            int lastId = brHeader.ReadInt32();
-        //            newBhWriter.Write(lastId);
-        //            for (int i = 0; i < n; i++)
-        //            {
-        //                if (i != index)
-        //                {
-        //                    //TODO: Agregar logica del escribir en el temporal
-        //                }
-        //            }
-        //        }
-
-        //    }
-        //    return false;
-        //}
+        public bool Delete<T>(T t)
+        {
+            return false;
+        }
 
         public int Update<T>(T t)
         {
