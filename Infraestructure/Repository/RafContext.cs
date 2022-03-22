@@ -137,6 +137,7 @@ namespace Infraestructure.Repository
             try
             {
                 T newValue = (T)Activator.CreateInstance(typeof(T));
+                //
                 int indiceID = BinarySearch(id);
                 using (BinaryReader brHeader = new BinaryReader(HeaderStream),
                                     brData = new BinaryReader(DataStream))
@@ -311,6 +312,7 @@ namespace Infraestructure.Repository
                     int n = brHeader.ReadInt32();
                     int k = brHeader.ReadInt32();
 
+                    //
                     brHeader.BaseStream.Seek(8, SeekOrigin.Begin);
 
                     using (BinaryWriter brtemp = new BinaryWriter(TemporalHeaderStream))
@@ -318,7 +320,7 @@ namespace Infraestructure.Repository
 
                         brtemp.Write(n - 1);
 
-                        if (index == k)
+                        if (id == k)
                         {
                             k--;
                         }
@@ -326,7 +328,7 @@ namespace Infraestructure.Repository
                         for (int i = 0; i < brHeader.BaseStream.Length / 4 - 2; i++)
                         {
                             lector = brHeader.ReadInt32();
-                            if (index != lector)
+                            if (id != lector)
                             {
                                 brtemp.Write(lector);
                             }
@@ -344,8 +346,7 @@ namespace Infraestructure.Repository
             catch (Exception)
             {
                 return false;
-                throw;
-
+                //throw;
             }
 
 
@@ -359,14 +360,12 @@ namespace Infraestructure.Repository
             int id;
             try
             {
-                //si no encuentra la propiedad manda un argumentnullexception
                 id = (int)t.GetType().GetProperty("Id").GetValue(t);
                 int index = BinarySearch(id);
                 if (index < 0)
                 {
                     throw new ArgumentException($"No se encontro un objeto con el Id: {id}");
                 }
-                //al inicializarlo lo puedo cambiar para la otra data for overwrite
                 using (BinaryWriter bwData = new BinaryWriter(DataStream))
                 {
                     long posd = index * size;
@@ -380,7 +379,6 @@ namespace Infraestructure.Repository
 
                         if (type.IsGenericType)
                         {
-                            //TODO: Implementar para generico
                             continue;
                         }
                         if (type == typeof(int))
@@ -421,7 +419,6 @@ namespace Infraestructure.Repository
             }
             catch (Exception)
             {
-            
                 throw;
             }
         }
@@ -430,7 +427,6 @@ namespace Infraestructure.Repository
             using (BinaryReader brHeader = new BinaryReader(HeaderStream))
             {
                 brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
-                //posible verificacion por si no hay elementos
                 int fin = brHeader.ReadInt32() - 1;
                 int inicio = 0;
                 while (inicio <= fin)
@@ -445,12 +441,10 @@ namespace Infraestructure.Repository
                     }
                     if (datoBuscado < valorCentral)
                     {
-                       
                         fin = indiceCentral - 1;
                     }
                     else
                     {
-                      
                         inicio = indiceCentral + 1;
                     }
                 }

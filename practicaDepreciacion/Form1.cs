@@ -119,7 +119,8 @@ namespace practicaDepreciacion
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             idSeleccionado = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
-            MessageBox.Show(idSeleccionado.ToString());
+            //MessageBox.Show(idSeleccionado.ToString());
+            llenarDatos();
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -133,28 +134,33 @@ namespace practicaDepreciacion
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            
-            bool verificado = verificar();
-            if (verificado == false)
+            if (idSeleccionado!=0)
             {
-                MessageBox.Show("Tienes que llenar todos los formularios.");
+                bool verificado = verificar();
+                if (verificado == false)
+                {
+                    MessageBox.Show("Tienes que llenar todos los formularios.");
+                }
+                else
+                {
+                    Activo activo = new Activo()
+                    {
+                        Nombre = txtNombre.Text,
+                        Valor = double.Parse(txtValor.Text),
+                        ValorResidual = double.Parse(txtValorR.Text),
+                        VidaUtil = int.Parse(txtVidaU.Text),
+                        Id = idSeleccionado
+                    };
+                    activoServices.Update(activo);
+                    dataGridView1.DataSource = null;
+                    limpiar();
+                    dataGridView1.DataSource = activoServices.Read();
+                    idSeleccionado = 0;
+                } 
             }
             else
             {
-
-                Activo activo = new Activo()
-                {
-                    Nombre = txtNombre.Text,
-                    Valor = double.Parse(txtValor.Text),
-                    ValorResidual = double.Parse(txtValorR.Text),
-                    VidaUtil = int.Parse(txtVidaU.Text),
-                    Id = idSeleccionado
-                };
-                activoServices.Update(activo);
-                dataGridView1.DataSource = null;
-                limpiar();
-                dataGridView1.DataSource = activoServices.Read();
-
+                MessageBox.Show("No se ha seleccionado nada");
             }
         }
 
@@ -162,14 +168,14 @@ namespace practicaDepreciacion
         {
             if (idSeleccionado != 0)
             {
-                //se puede cambiar a que solo reciba el id
                 Activo activo = activoServices.GetById(idSeleccionado);
                 if (activoServices.Delete(activo))
                 {
                     MessageBox.Show($"El elemento con {idSeleccionado} fue eliminado correctamente");
                     dataGridView1.DataSource = null;
-                    MessageBox.Show("MEnsaje despues de establecer datasource en null");
                     dataGridView1.DataSource = activoServices.Read();
+                    limpiar();
+                    idSeleccionado=0;
                 }
                 else
                 {
@@ -180,6 +186,14 @@ namespace practicaDepreciacion
             {
                 MessageBox.Show("No se ha seleccionado nada");
             }
+        }
+        private void llenarDatos()
+        {
+            Activo activo = activoServices.GetById(idSeleccionado);
+            txtNombre.Text=activo.Nombre;
+            txtValor.Text=activo.Valor.ToString();
+            txtValorR.Text = activo.ValorResidual.ToString();
+            txtVidaU.Text=activo.VidaUtil.ToString();
         }
     }
 }

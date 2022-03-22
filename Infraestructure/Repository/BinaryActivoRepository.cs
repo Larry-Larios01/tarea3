@@ -68,7 +68,16 @@ namespace Infraestructure.Repository
 
         public int Update(Activo t)
         {
-            return context.Update<Activo>(t);
+            try
+            {
+
+                return context.Update<Activo>(t);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
