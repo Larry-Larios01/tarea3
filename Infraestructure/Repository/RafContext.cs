@@ -13,6 +13,7 @@ namespace Infraestructure.Repository
 {
     public class RAFContext<T>
     {
+        private const string temporal = "temporal";
         private string fileName;
         private int size;
         private const string directoryName = "DATA";
@@ -33,9 +34,10 @@ namespace Infraestructure.Repository
         {
             get => File.Open($"{fileName}.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
-        public Stream DataStreamForOverwrite
+        
+        public Stream TemporalHeaderStream
         {
-            get => File.Open($"{fileName}.dat", FileMode.Create, FileAccess.ReadWrite);
+            get => File.Open($"{temporal}.hd", FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
         public void Create<T>(T t)
         {
@@ -135,10 +137,11 @@ namespace Infraestructure.Repository
             try
             {
                 T newValue = (T)Activator.CreateInstance(typeof(T));
+                int indiceID = BinarySearch(id);
                 using (BinaryReader brHeader = new BinaryReader(HeaderStream),
                                     brData = new BinaryReader(DataStream))
                 {
-                    //TODO Validar como en el metodo create
+                    
                     brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
                     int n = brHeader.ReadInt32();
                     int k = brHeader.ReadInt32();
@@ -149,11 +152,15 @@ namespace Infraestructure.Repository
                     }
 
                     PropertyInfo[] properties = newValue.GetType().GetProperties();
-                    long posh = 8 + (id - 1) * 4;
-                    //TODO Add Binary search to find the id
+
+
+                    //long posh = 8 + (indiceID - 1) * 4;
+                    long posh = 8 + indiceID * 4;
+
+                    
                     brHeader.BaseStream.Seek(posh, SeekOrigin.Begin);
+                    
                     int index = brHeader.ReadInt32();
-                    //TODO VALIDATE INDEX
                     long posd = (index - 1) * size;
                     brData.BaseStream.Seek(posd, SeekOrigin.Begin);
                     foreach (PropertyInfo pinfo in properties)
@@ -203,6 +210,7 @@ namespace Infraestructure.Repository
             }
             catch (Exception)
             {
+             
                 throw;
             }
 
@@ -221,6 +229,7 @@ namespace Infraestructure.Repository
                         brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
                         n = brHeader.ReadInt32();
                     }
+                  
                 }
 
                 if (n == 0)
@@ -288,10 +297,61 @@ namespace Infraestructure.Repository
             }
         }
 
-        //TODO Add Update and Delete method
+
         public bool Delete<T>(T t)
         {
-            return false;
+            try
+            {
+                int id = (int)t.GetType().GetProperty("Id").GetValue(t);
+                int index = BinarySearch(id);
+                int lector;
+                using (BinaryReader brHeader = new BinaryReader(HeaderStream))
+                {
+                    brHeader.BaseStream.Seek(0, SeekOrigin.Begin);
+                    int n = brHeader.ReadInt32();
+                    int k = brHeader.ReadInt32();
+
+                    brHeader.BaseStream.Seek(8, SeekOrigin.Begin);
+
+                    using (BinaryWriter brtemp = new BinaryWriter(TemporalHeaderStream))
+                    {
+
+                        brtemp.Write(n - 1);
+
+                        if (index == k)
+                        {
+                            k--;
+                        }
+                        brtemp.Write(k);
+                        for (int i = 0; i < brHeader.BaseStream.Length / 4 - 2; i++)
+                        {
+                            lector = brHeader.ReadInt32();
+                            if (index != lector)
+                            {
+                                brtemp.Write(lector);
+                            }
+
+                        }
+
+                    }
+
+                }
+                File.Delete($"{fileName}.hd");
+                File.Move($"{temporal}.hd", $"{fileName}.hd");
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+
+            }
+
+
+
+
+
         }
 
         public int Update<T>(T t)
@@ -299,7 +359,7 @@ namespace Infraestructure.Repository
             int id;
             try
             {
-
+                //si no encuentra la propiedad manda un argumentnullexception
                 id = (int)t.GetType().GetProperty("Id").GetValue(t);
                 int index = BinarySearch(id);
                 if (index < 0)
@@ -361,7 +421,8 @@ namespace Infraestructure.Repository
             }
             catch (Exception)
             {
-                throw new ArgumentException($"El objeto {t.GetType().Name} no contiene la propiedad Id");
+            
+                throw;
             }
         }
         private int BinarySearch(int datoBuscado)
@@ -384,19 +445,18 @@ namespace Infraestructure.Repository
                     }
                     if (datoBuscado < valorCentral)
                     {
-                        //brHeader.BaseStream.Seek(-4, SeekOrigin.Current);
-                        //fin = brHeader.Read();
+                       
                         fin = indiceCentral - 1;
                     }
                     else
                     {
-                        //brHeader.BaseStream.Seek(4, SeekOrigin.Current);
-                        //inicio = brHeader.Read();
+                      
                         inicio = indiceCentral + 1;
                     }
                 }
                 return -1;
             }
         }
+
     }
 }

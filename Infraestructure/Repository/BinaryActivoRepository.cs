@@ -56,7 +56,14 @@ namespace Infraestructure.Repository
         public bool Delete(Activo t)
         {
 
-            throw new NotImplementedException();
+            try
+            {
+                return context.Delete<Activo>(t );
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public int Update(Activo t)

@@ -108,11 +108,7 @@ namespace practicaDepreciacion
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //if (e.RowIndex >= 0)
-            //{
-            //    FrmDepreciacion depreciacion = new FrmDepreciacion(activoServices.Read()[e.RowIndex]);
-            //    depreciacion.ShowDialog();
-            //}
+      
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -137,7 +133,7 @@ namespace practicaDepreciacion
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-
+            
             bool verificado = verificar();
             if (verificado == false)
             {
@@ -159,6 +155,30 @@ namespace practicaDepreciacion
                 limpiar();
                 dataGridView1.DataSource = activoServices.Read();
 
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (idSeleccionado != 0)
+            {
+                //se puede cambiar a que solo reciba el id
+                Activo activo = activoServices.GetById(idSeleccionado);
+                if (activoServices.Delete(activo))
+                {
+                    MessageBox.Show($"El elemento con {idSeleccionado} fue eliminado correctamente");
+                    dataGridView1.DataSource = null;
+                    MessageBox.Show("MEnsaje despues de establecer datasource en null");
+                    dataGridView1.DataSource = activoServices.Read();
+                }
+                else
+                {
+                    MessageBox.Show("El elemento no fue eliminado correctamente");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se ha seleccionado nada");
             }
         }
     }
