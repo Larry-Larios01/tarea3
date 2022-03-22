@@ -155,7 +155,7 @@ namespace Infraestructure.Repository
                     PropertyInfo[] properties = newValue.GetType().GetProperties();
 
 
-                    //long posh = 8 + (indiceID - 1) * 4;
+                    //long posh = 8 + (id - 1) * 4;
                     long posh = 8 + indiceID * 4;
 
                     
