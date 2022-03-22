@@ -75,18 +75,24 @@ namespace practicaDepreciacion
             else
             {
 
-                Activo activo = new Activo()
+                if (verificarValorResidual())
                 {
-                    Nombre = txtNombre.Text,
-                    Valor = double.Parse(txtValor.Text),
-                    ValorResidual=double.Parse(txtValorR.Text),
-                    VidaUtil= int.Parse(txtVidaU.Text)
-                };
-                activoServices.Add(activo);
-                dataGridView1.DataSource = null;
-                limpiar();
-                dataGridView1.DataSource = activoServices.Read();
-
+                    Activo activo = new Activo()
+                    {
+                        Nombre = txtNombre.Text,
+                        Valor = double.Parse(txtValor.Text),
+                        ValorResidual = double.Parse(txtValorR.Text),
+                        VidaUtil = int.Parse(txtVidaU.Text)
+                    };
+                    activoServices.Add(activo);
+                    dataGridView1.DataSource = null;
+                    limpiar();
+                    dataGridView1.DataSource = activoServices.Read(); 
+                }
+                else
+                {
+                    MessageBox.Show("El valor residual no puede ser mayor al valor del activo");
+                }
             }
         }
         private bool verificar()
@@ -105,7 +111,16 @@ namespace practicaDepreciacion
             this.txtValorR.Text = String.Empty;
             this.txtVidaU.Text = String.Empty;
         }
-
+        private bool verificarValorResidual()
+        {
+            double valor = double.Parse(txtValor.Text);
+            double valorResidual = double.Parse(txtValorR.Text);
+            if (valorResidual > valor)
+            {
+                return false;
+            }
+            return true;
+        }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
       
@@ -143,19 +158,26 @@ namespace practicaDepreciacion
                 }
                 else
                 {
-                    Activo activo = new Activo()
+                    if (verificarValorResidual())
                     {
-                        Nombre = txtNombre.Text,
-                        Valor = double.Parse(txtValor.Text),
-                        ValorResidual = double.Parse(txtValorR.Text),
-                        VidaUtil = int.Parse(txtVidaU.Text),
-                        Id = idSeleccionado
-                    };
-                    activoServices.Update(activo);
-                    dataGridView1.DataSource = null;
-                    limpiar();
-                    dataGridView1.DataSource = activoServices.Read();
-                    idSeleccionado = 0;
+                        Activo activo = new Activo()
+                        {
+                            Nombre = txtNombre.Text,
+                            Valor = double.Parse(txtValor.Text),
+                            ValorResidual = double.Parse(txtValorR.Text),
+                            VidaUtil = int.Parse(txtVidaU.Text),
+                            Id = idSeleccionado
+                        };
+                        activoServices.Update(activo);
+                        dataGridView1.DataSource = null;
+                        limpiar();
+                        dataGridView1.DataSource = activoServices.Read();
+                        idSeleccionado = 0; 
+                    }
+                    else
+                    {
+                        MessageBox.Show("El valor residual no puede ser mayor que el valor del activo");
+                    }
                 } 
             }
             else

@@ -317,13 +317,14 @@ namespace Infraestructure.Repository
 
                     using (BinaryWriter brtemp = new BinaryWriter(TemporalHeaderStream))
                     {
+                        brtemp.BaseStream.Seek(0, SeekOrigin.Begin);
 
                         brtemp.Write(n - 1);
 
-                        if (id == k)
-                        {
-                            k--;
-                        }
+                        //if (id == k)
+                        //{
+                        //    k--;
+                        //}
                         brtemp.Write(k);
                         for (int i = 0; i < brHeader.BaseStream.Length / 4 - 2; i++)
                         {
