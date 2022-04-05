@@ -72,6 +72,7 @@ namespace practicaDepreciacion
             this.Controls.Add(this.comboBox1);
             this.Name = "FrmDepreciacion";
             this.Text = "FrmDepreciacion";
+            this.Load += new System.EventHandler(this.FrmDepreciacion_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
