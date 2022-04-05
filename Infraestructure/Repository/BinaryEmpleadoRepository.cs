@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Repository
 {
-    public class BinaryEmpleadoRepository : IActivoModel
+    public class BinaryEmpleadoRepository : IEmpleadoModel
     {
-        private RAFContext<Activo> context;
+        private RAFContext context;
         private const int SIZE = 800;
         public BinaryEmpleadoRepository()
         {
-            context = new RAFContext<Activo>("Empleado", SIZE);
+            context = new RAFContext("Empleado", SIZE);
         }
-        public void Add(Activo t)
+        public void Add(Empleado t)
         {
             try
             {
-                context.Create<Activo>(t);
+                context.Create<Empleado>(t);
             }
             catch (IOException)
             {
@@ -29,11 +29,11 @@ namespace Infraestructure.Repository
             }
         }
 
-        public Activo GetById(int id)
+        public Empleado GetById(int id)
         {
             try
             {
-                return context.Get<Activo>(id);
+                return context.Get<Empleado>(id);
             }
             catch (Exception)
             {
@@ -41,11 +41,11 @@ namespace Infraestructure.Repository
             }
         }
 
-        public List<Activo> Read()
+        public List<Empleado> Read()
         {
             try
             {
-                return context.GetAll<Activo>();
+                return context.GetAll<Empleado>();
             }
             catch (Exception)
             {
@@ -53,12 +53,12 @@ namespace Infraestructure.Repository
             }
         }
 
-        public bool Delete(Activo t)
+        public bool Delete(Empleado t)
         {
 
             try
             {
-                return context.Delete<Activo>(t);
+                return context.Delete<Empleado>(t);
             }
             catch (Exception)
             {
@@ -66,12 +66,12 @@ namespace Infraestructure.Repository
             }
         }
 
-        public int Update(Activo t)
+        public int Update(Empleado t)
         {
             try
             {
 
-                return context.Update<Activo>(t);
+                return context.Update<Empleado>(t);
             }
             catch (Exception)
             {
@@ -79,5 +79,7 @@ namespace Infraestructure.Repository
                 throw;
             }
         }
+
+        
     }
 }

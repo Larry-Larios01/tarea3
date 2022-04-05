@@ -174,6 +174,7 @@
             this.btnNuevoEmpleado.TabIndex = 13;
             this.btnNuevoEmpleado.Text = "Nuevo Empleado";
             this.btnNuevoEmpleado.UseVisualStyleBackColor = true;
+            this.btnNuevoEmpleado.Click += new System.EventHandler(this.BtnNuevoEmpleado_Click);
             // 
             // Form1
             // 

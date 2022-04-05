@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Repository
 {
-    public class RAFContext<T>
+    public class RAFContext
     {
         private const string temporal = "temporal";
         private string fileName;

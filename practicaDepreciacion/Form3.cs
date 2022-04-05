@@ -15,7 +15,7 @@ namespace practicaDepreciacion
     public partial class Form3 : Form
     {
         IEmpleadoServices empServices;
-        private int idSeleccionado;
+        
         public Form3(IEmpleadoServices empServices)
         {
             this.empServices = empServices;
@@ -35,7 +35,13 @@ namespace practicaDepreciacion
                 Email = txtemail.Text
             };
             empServices.Add(activo);
+            Form3 data
             
+        }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

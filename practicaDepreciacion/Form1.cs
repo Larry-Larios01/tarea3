@@ -16,8 +16,10 @@ namespace practicaDepreciacion
     {
         IActivoServices activoServices;
         private int idSeleccionado;
-        public Form1(IActivoServices ActivoServices)
+        IEmpleadoServices empleado;
+        public Form1(IActivoServices ActivoServices, IEmpleadoServices empleado)
         {
+            this.empleado = empleado;
             this.activoServices = ActivoServices;
             InitializeComponent();
         }
@@ -221,6 +223,14 @@ namespace practicaDepreciacion
         private void button1_Click(object sender, EventArgs e)
         {
             Form2 depreciacion = new Form2();
+            depreciacion.ShowDialog();
+            
+        }
+
+        private void BtnNuevoEmpleado_Click(object sender, EventArgs e)
+        {
+            Form3 depreciacion = new Form3(empleado);
+            depreciacion.ShowDialog();
         }
     }
 }
